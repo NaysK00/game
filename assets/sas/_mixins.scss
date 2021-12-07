@@ -1,0 +1,27 @@
+@mixin resetlist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+}
+
+@mixin forPhoneOnly {
+    @media(max-width:500px) {
+        @content;
+    }
+}
+
+@mixin forTabletOnly {
+    @media(max-width:900px) {
+        @content;
+    }
+}
+// @mixin for-size($size){
+//     @if $size == 'forPhoneOnly'@media(max-width:500px) {
+//         @content;
+//     }
+//     @else if $size =='forTabletOnly' @media(max-width:900px) {
+//         @content;
+//     }
+// }
+// }
