@@ -3,6 +3,18 @@ const game = {
     attempts: 6,
     elemLetters: document.querySelector('.gameLetters'),
     elemattempts: document.querySelector('.attempts'),
+    // pojemnik na kategorie
+    elemCategory: document.querySelector(".gameCategory"),
+    currentCategory: null,
+    currentSentence: null,
+    // haslo bez spacji
+    currentSentenceLetters: null,
+    // pojemnik na haslo
+    elemSentence: document.querySelector('.gameSentence'),
+
+    showCategory: function () {
+        this.elemCategory.innerText = this.currentCategory
+    },
 
     showAttempts: function () {
         this.elemattempts.innerText = this.attempts
@@ -40,6 +52,27 @@ const game = {
         })
     },
 
+    randomSentence: function () {
+        this.elemSentence.innerText = ''
+        let randomArrayIndex = Math.floor(Math.random() * phrases.length);
+        let randomPhrase = phrases[randomArrayIndex];
+        this.currentCategory = randomPhrase.category;
+        this.showCategory();
+        this.currentSentence = randomPhrase.slogan.toUpperCase();
+        this.currentSentenceLetters = this.currentSentence.replace(/\s/g, "")
+
+        let letters = this.currentSentence.split('')
+        letters.forEach((letter) => {
+            const div = document.createElement('div');
+            div.classList.add('gameSentenceBox');
+            if (letter === " ") {
+                div.classList.add('gameSentenceSpace');
+
+            }
+            this.elemSentence.appendChild(div);
+        })
+    },
+
     // funkcja tworzaca tablice gry
     initBoard: function () {
         this.generateLetterButtons();
@@ -51,7 +84,7 @@ const game = {
         this.attempts = 6;
         this.showAttempts();
         this.enableLetters();
-
+        this.randomSentence();
     }
 }
 game.initBoard();
