@@ -62,7 +62,7 @@ const game = {
             letter.disabled = false;
         })
     },
-    gameOver: function () {
+    gameOver: function (reason) {
         alert("Zawisles, haslo to " + this.currentSentence);
         this.disableLetters
     },
