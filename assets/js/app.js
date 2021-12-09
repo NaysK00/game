@@ -1,6 +1,10 @@
 const game = {
     // ilosc prob na zgadniecie
     attempts: 6,
+    time: 60,
+    interval: null,
+    // pojemnik na czas
+    elemTime: document.querySelector(".gameTime"),
     elemLetters: document.querySelector('.gameLetters'),
     elemattempts: document.querySelector('.attempts'),
     // pojemnik na kategorie
@@ -12,6 +16,7 @@ const game = {
     // pojemnik na haslo
     elemSentence: document.querySelector('.gameSentence'),
 
+
     showCategory: function () {
         this.elemCategory.innerText = this.currentCategory
     },
@@ -20,6 +25,7 @@ const game = {
         this.elemattempts.innerText = this.attempts
     },
 
+    showTime: function () { this.elemTime.innerText = this.time },
 
     generateLetterButtons: function () {
         const alphabet = ["a", "ą", "b", "c", "ć", "d", "e", "ę", "f", "g", "h", "i", "j", "k", "l", "ł", "m", "n", "ń", "o", "ó", "p", "q", "r", "s", "ś", "t", "u", "v", "w", "x", "y", "z", "ź", "ż"]
@@ -28,6 +34,11 @@ const game = {
             button.innerText = letter;
             this.elemLetters.appendChild(button)
             button.classList.add('gameLetter')
+            button.addEventListener('click', (event) => {
+                const letter = event.target.innerText;
+                event.target.disabled = true
+                this.checkLetterInSentence(letter);
+            });
 
         })
 
@@ -51,6 +62,10 @@ const game = {
             letter.disabled = false;
         })
     },
+    gameOver: function () {
+        alert("Zawisles, haslo to " + this.currentSentence);
+        this.disableLetters
+    },
 
     randomSentence: function () {
         this.elemSentence.innerText = ''
@@ -72,7 +87,27 @@ const game = {
             this.elemSentence.appendChild(div);
         })
     },
+    // check letters
+    checkLetterInSentence: function (letter) {
+        if (this.currentSentence.includes(letter)) {
+            for (let i = 0; i < this.currentSentence.length; i++) {
+                if (this.currentSentence[i] === letter) {
+                    this.elemSentence.querySelectorAll(".gameSentenceBox")[i].innerText = letter;
+                }
+            }
+            this.currentSentenceLetters = this.currentSentenceLetters.replace(new RegExp(letter, "g"), "");
+            if (this.currentSentenceLetters === 0) {
+                setTimeout(() => { alert("GG WP"); }, 300)
+            }
+        } else {
+            this.attempts--;
+            this.showAttempts();
+            if (this.attempts <= 0) {
+                this.gameOver();
+            };
+        }
 
+    },
     // funkcja tworzaca tablice gry
     initBoard: function () {
         this.generateLetterButtons();
@@ -85,6 +120,17 @@ const game = {
         this.showAttempts();
         this.enableLetters();
         this.randomSentence();
+        // 
+        this.time = 60;
+        this.interval = setInterval(() => {
+            this.time--;
+            if (this.time <= 0) {
+                clearInterval(interval)
+                this.gameOver();
+            }
+            this.showTime();
+        }, 1000);
+
     }
 }
 game.initBoard();
